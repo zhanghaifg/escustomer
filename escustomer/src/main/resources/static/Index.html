@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ElasticSearch Customer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container" id ="customerInput">
+  <h2>Customer input</h2>
+   <form>
+   <div class="row">
+	    <div class="col-xs-3">
+	      <label for="lastName">First Name:</label>
+	      <input type="text" class="form-control" id="firstName">
+	    </div>
+   </div>
+   <div class="row">
+	    <div class="col-xs-3">
+	      <label for="lastName">Last Name:</label>
+	      <input type="text" class="form-control" id="lastName">
+	    </div>
+    </div>
+    <div class="row">
+	    <div class="col-xs-3">
+	      <label for="email">Email:</label>
+	      <input type="email" class="form-control" id="email">
+	    </div>
+    </div>
+    <div class="row">
+	    <div class="col-xs-3">
+	      <label for="street">Street:</label>
+	      <input type="text" class="form-control" id="street">
+	    </div>
+    </div>
+    <div class="row">
+	    <div class="col-xs-3">
+	      <label for="city">City:</label>
+	      <input type="text" class="form-control" id="city">
+	    </div>
+    </div>
+     <div class="row">
+	    <div class="col-xs-3">
+	      <label for="state">State:</label>
+	      <input type="text" class="form-control" id="state">
+	    </div>
+    </div>
+    
+     <div class="row">
+	    <div class="col-xs-3">
+	      <label for="zipcode">Zipcode:</label>
+	      <input type="text" class="form-control" id="zipcode">
+	    </div>
+    </div>
+    <button type="button" class="btn-primary" id="bsubmit"><b>Save</b></button>
+  </form>
+</div>
+
+<div id = "cardList" ></div>
+
+<div class="container" id ="cardInput">
+  <h2>Card input</h2>
+   <form>
+    <div class="row">
+   		<div class="col-xs-5">
+   			<label>Type:</label>
+				<label class="radio-inline">
+			      <input type="radio" value="Credit" name="type">Credit
+			    </label>
+			    <label class="radio-inline">
+			      <input type="radio" value="Gift" name="type">Gift
+			    </label>
+			    <label class="radio-inline">
+			      <input type="radio" value="Debt" name="type">Debt
+			 </label>
+		</div>
+    </div>
+      <div class="row">
+	    <div class="col-xs-3">
+	      <label for="cardNo">Card Number :</label>
+	      <input type="text" class="form-control" id="cardNo">
+	    </div>
+    </div>
+    <div class="row">
+	    <div class="col-xs-5">
+	      <label>Expired Date:</label>
+	      Month <input id="month" type="text" size="2" maxlength="2" value="MM">
+		  Year:<input id="year" type="text" size="4" maxlength="4" value="YYYY">
+	    </div>
+   </div>
+    
+    <button type="button" class="btn-primary" id="addCard"><b>Add Card</b></button>
+    <button type="button" class="btn-primary" id="customerSubmit"><b>Submit</b></button>
+  </form>
+</div>
+
+<div class="container">
+   <form>
+     <div class="row">
+	    <div class="col-xs-3">
+	      <label for="deleteId">ID:</label>
+	      <input type="text" class="form-control" id="deleteId">
+	    </div>
+    </div>
+    <button type="button" class="btn-primary" id="bdelete"><b>Delete</b></button>
+  </form>
+</div>
+<span id = "stext"></span>
+<script type="text/javascript">
+$(document).ready(function(){
+	var CUSTOMER = {};
+	var CARD = [];
+	$("#cardInput").hide();
+	$("#cardList").hide();
+	$("#bsubmit").click(function(){
+//		alert("click");
+		var customer = {};
+		customer.firstName = $("#firstName").val();
+		customer.lastName = $("#lastName").val();
+		customer.email = $("#email").val();
+		customer.street = $("#street").val();
+		customer.city = $("#city").val();
+		customer.state = $("#state").val();
+		customer.zipcode = $("#zipcode").val();
+		CUSTOMER = customer;
+		var jsondata = JSON.stringify(CUSTOMER);
+		console.log(jsondata);
+ //		alert("after post");
+ 		$('#customerInput :input').attr('disabled', true);
+ 		$("#cardInput").show();
+		
+	});
+	$("#addCard").click(function(){
+		var card = {};
+		card.type = $("input[name=type]:checked").val();
+		card.cardNo = $("#cardNo").val();
+		var expiredDate;
+		var month = $("#month").val();
+		var year = $("#year").val();
+		expiredDate = year+"-"+month+"-01";
+		card.expiredDate = expiredDate;
+		CARD.push(card);
+		console.log(JSON.stringify(CARD));
+		CUSTOMER.card = CARD;
+		var jsondata = JSON.stringify(CUSTOMER);
+		console.log(jsondata);
+		$("#cardList").show();
+		showCardList();
+	});		
+	function showCardList(){
+		var size = CARD.length;
+		var s = '<div class="container" style = "background-color: lightblue">';
+		s += ' <h3>Card List:</h3> <ul class="list-group" > ';
+		if(size>0){
+			for (var i = 0; i<size; i++){
+				s += "<li class='list-group-item'><h4>";
+				s += CARD[i].type + ", Card No:"+CARD[i].cardNo+", Expired date:"+CARD[i].expiredDate; 
+				s += "</h4></li>";
+			}
+			
+		}
+		s += "</ul> </div>";
+		$("#cardList").html(s);
+	}
+	$("#customerSubmit").click(function(){
+		var jsondata = JSON.stringify(CUSTOMER);
+		console.log(jsondata);
+
+		var uri = "/customers";
+		$.ajax({
+	        type: "POST",
+	        url: uri,
+	        data: jsondata,
+	        contentType: "application/json; charset=utf-8",
+	        dataType: "json",
+ 	        success: function(data){
+	          alert("after");
+	          console.log(JSON.stringify(data));
+	        },
+	        failure: function(errMsg) {
+	            alert(errMsg);
+	        }
+	    });
+		
+	});
+	$("#bdelete").click(function(){
+		var id = $("#deleteId").val();
+		console.log(id);
+		var uri = "/customers/"+id;
+		$.ajax({
+	        type: "DELETE",
+	        url: uri,
+	        success: function(data){
+	          alert("after");
+	          console.log(data);
+	        },
+	        failure: function(errMsg) {
+	            alert(errMsg);
+	        }
+	    });
+	});
+});
+
+</script>
+</body>
+</html>
