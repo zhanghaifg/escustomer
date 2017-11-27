@@ -25,10 +25,10 @@ public class CustomerControl {
 	public String addCustomer(@RequestBody Customer c){
 		System.out.println("---------Print Customer--------");
 		System.out.println(c.toString());
-		String id = customerRepository.save(c).getId();
+/*		String id = customerRepository.save(c).getId();
 		System.out.println("Id:"+id);
-		return id;
-//		return "success";
+		return id;*/
+		return "success";
 	}
 	
 	@RequestMapping(value="/customers/{id}",method=RequestMethod.DELETE)

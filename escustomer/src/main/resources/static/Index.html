@@ -109,7 +109,27 @@
     <button type="button" class="btn-primary" id="bdelete"><b>Delete</b></button>
   </form>
 </div>
-<span id = "stext"></span>
+<span id = "serror"></span>
+<script src="validate.js"></script>
+<!-- <script type="text/javascript">
+function validate(){
+	var v1 = isNaN($("#month").val());
+	var v2 = isNaN($("#year").val());
+	var month = $("#month").val();
+	var year = $("#year").val();
+	if (month.length!=2) {
+		var s = "input 2 digit for month";
+		$("#serror").text(s);
+		return false;
+	}
+	if (v1||v2){
+		var s = "input number for month and year";
+		$("#serror").text(s);
+		return false;
+	}
+	return true;
+}
+</script> -->
 <script type="text/javascript">
 $(document).ready(function(){
 	var CUSTOMER = {};
@@ -141,6 +161,9 @@ $(document).ready(function(){
 		var expiredDate;
 		var month = $("#month").val();
 		var year = $("#year").val();
+		if(!validate()){
+			return;
+		}
 		expiredDate = year+"-"+month+"-01";
 		card.expiredDate = expiredDate;
 		CARD.push(card);
